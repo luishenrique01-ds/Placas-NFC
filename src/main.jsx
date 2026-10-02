@@ -3,6 +3,7 @@ import {createRoot} from 'react-dom/client';
 import QRCode from 'qrcode';
 import {Check,ChevronRight,ImagePlus,MessageCircle,Smartphone,Upload,Wifi,Heart,Star,MapPin} from 'lucide-react';
 import './styles.css';
+import scenePhoto from './gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg';
 
 const MODELS=[
  {id:'small',name:'Pequena',size:'20 × 30 cm',desc:'Ideal para balcões e mesas',price:59.90},
@@ -50,51 +51,57 @@ function App(){
  </div>
 }
 
-function PerspectivePlateCanvas({name,logo,color,background,qr,message,size}){
- const canvasRef=useRef(null);
- const sceneRef=useRef(null);
- const logoRef=useRef(null);
- const qrRef=useRef(null);
- const [ready,setReady]=useState(false);
-
- useEffect(()=>{setReady(false);if(logo){const img=new Image();img.onload=()=>{logoRef.current=img;setReady(true)};img.src=logo}else{logoRef.current=null;setReady(true)}},[logo]);
- useEffect(()=>{if(qr){const img=new Image();img.onload=()=>{qrRef.current=img;setReady(true)};img.src=qr}else{qrRef.current=null;setReady(true)}},[qr]);
+function PerspectivePlateCanvas({name,logo,color,background,qr,message}){
+ const canvasRef=useRef(null),wrapRef=useRef(null);
+ const sceneImgRef=useRef(null),logoImgRef=useRef(null),qrImgRef=useRef(null);
+ const [assetsReady,setAssetsReady]=useState(false);
 
  useEffect(()=>{
-  const canvas=canvasRef.current,scene=sceneRef.current;if(!canvas||!scene||!ready)return;
-  const draw=()=>{
-   const rect=scene.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
-   canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);canvas.style.width=rect.width+'px';canvas.style.height=rect.height+'px';
-   const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,rect.width,rect.height);
-   const W=330,H=445,off=document.createElement('canvas');off.width=W;off.height=H;const o=off.getContext('2d');
-   const bg={dark:'#080b12',red:'#5b1118',blue:'#0b2740',green:'#0b3a2d',light:'#f7f7f5'}[background]||'#080b12';
-   const accent=color||'#ffc51b';o.fillStyle=bg;o.fillRect(0,0,W,H);
-   if(background==='light'){o.fillStyle='#101827';}else{o.fillStyle='#fff';}
-   o.font='900 13px Arial';o.textAlign='center';o.fillText(name||'SUA EMPRESA',W/2,58);
-   o.font='900 24px Arial';o.fillText('SUA AVALIAÇÃO',W/2,103);
-   o.fillStyle=accent;o.fillText('É MUITO IMPORTANTE!',W/2,128);
-   o.fillStyle='#ef3340';o.fillRect(85,145,160,4);o.fillStyle=background==='light'?'#334155':'#fff';
-   o.font='700 11px Arial';o.fillText('Aponte seu celular',W/2,173);o.fillText('ou escaneie o QR Code',W/2,188);
-   if(logoRef.current){o.drawImage(logoRef.current,22,20,70,42)}else{o.strokeStyle='#ffffff55';o.strokeRect(22,20,70,42);o.fillStyle='#ffd21f';o.font='700 8px Arial';o.fillText('SUA LOGO',57,45)}
-   o.fillStyle=background==='light'?'#101827':'#fff';o.textAlign='left';o.font='700 11px Arial';o.fillText('G  Avalie nossa',25,236);o.font='700 11px Arial';o.fillText('     empresa no Google',25,251);
-   if(qrRef.current)o.drawImage(qrRef.current,220,210,82,82);else{o.strokeStyle='#111';o.strokeRect(220,210,82,82)}
-   o.textAlign='center';o.fillStyle=accent;o.font='900 24px Arial';o.fillText('★★★★★',W/2,330);
-   o.fillStyle=background==='light'?'#334155':'#fff';o.font='italic 12px Arial';o.fillText(message||'Sua opinião faz toda a diferença!',W/2,358);
-   o.font='700 9px Arial';o.fillText('♥  Sua opinião faz toda a diferença!',W/2,385);
-   o.strokeStyle=background==='light'?'#cbd5e1':'#ffffff45';o.strokeRect(8,8,W-16,H-16);
-   const img=document.createElement('img');img.src=new URL('./gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg',import.meta.url).href;
-   const paint=()=>{const iw=img.naturalWidth||864,ih=img.naturalHeight||1536,s=Math.max(rect.width/iw,rect.height/ih),rw=iw*s,rh=ih*s,ox=(rect.width-rw)/2,oy=rect.height-rh;
-     const pts=[[270,540],[529,523],[601,907],[344,972]].map(([x,y])=>[x*s+ox,y*s+oy]);
-     const inv=(a,b,c,d,e,f,g,h,i,j,k,l,m,n)=>{const det=a*(d*h-e*g)-b*(c*h-e*f)+c*(d*g-e*f);return det?[(i*(d*h-e*g)-j*(c*h-e*f)+k*(d*g-e*f))/det,(a*(j*h-k*g)-b*(i*h-k*f)+c*(i*g-j*f))/det]:[1,0]};
-     const affine=(p0,p1,p2,q0,q1,q2)=>{const [x0,y0]=p0,[x1,y1]=p1,[x2,y2]=p2,[u0,v0]=q0,[u1,v1]=q1,[u2,v2]=q2;const D=x0*(y1-y2)+x1*(y2-y0)+x2*(y0-y1);return [(u0*(y1-y2)+u1*(y2-y0)+u2*(y0-y1))/D,(v0*(y1-y2)+v1*(y2-y0)+v2*(y0-y1))/D,(u0*(x2-x1)+u1*(x0-x2)+u2*(x1-x0))/D,(v0*(x2-x1)+v1*(x0-x2)+v2*(x1-x0))/D,(u0*(x1*y2-x2*y1)+u1*(x2*y0-x0*y2)+u2*(x0*y1-x1*y0))/D,(v0*(x1*y2-x2*y1)+v1*(x2*y0-x0*y2)+v2*(x0*y1-x1*y0))/D]};
-     const src=[[0,0],[W,0],[W,H],[0,H]],rows=18,cols=18;
-     for(let r=0;r<rows;r++)for(let col=0;col<cols;col++){const x0=col*W/cols,y0=r*H/rows,x1=(col+1)*W/cols,y1=(r+1)*H/rows;const sx0=x0/W,sy0=y0/H,sx1=x1/W,sy1=y1/H;const bil=(sx,sy)=>{const a=pts[0],b=pts[1],c=pts[2],d=pts[3];return[(1-sx)*(1-sy)*a[0]+sx*(1-sy)*b[0]+sx*sy*c[0]+(1-sx)*sy*d[0],(1-sx)*(1-sy)*a[1]+sx*(1-sy)*b[1]+sx*sy*c[1]+(1-sx)*sy*d[1]]};const q0=bil(sx0,sy0),q1=bil(sx1,sy0),q2=bil(sx1,sy1),q3=bil(sx0,sy1);
-       const A=affine([x0,y0],[x1,y0],[x1,y1],q0,q1,q2);ctx.save();ctx.beginPath();ctx.moveTo(q0[0],q0[1]);ctx.lineTo(q1[0],q1[1]);ctx.lineTo(q2[0],q2[1]);ctx.lineTo(q3[0],q3[1]);ctx.closePath();ctx.clip();ctx.transform(A[0],A[3],A[1],A[4],A[2],A[5]);ctx.drawImage(off,x0,y0,x1-x0,y1-y0,x0,y0,x1-x0,y1-y0);ctx.restore();
+   let alive=true;
+   const load=(src,ref)=>new Promise(resolve=>{if(!src){ref.current=null;resolve();return}const im=new Image();im.onload=()=>{ref.current=im;resolve()};im.onerror=()=>resolve();im.src=src});
+   Promise.all([load(scenePhoto,sceneImgRef),load(logo,logoImgRef),load(qr,qrImgRef)]).then(()=>alive&&setAssetsReady(true));
+   return()=>{alive=false};
+ },[logo,qr]);
+
+ useEffect(()=>{
+   const canvas=canvasRef.current,wrap=wrapRef.current;
+   if(!canvas||!wrap||!assetsReady)return;
+   const draw=()=>{
+     const rect=wrap.getBoundingClientRect(),dpr=Math.min(window.devicePixelRatio||1,2);
+     if(rect.width<10||rect.height<10)return;
+     canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);
+     canvas.style.width=rect.width+'px';canvas.style.height=rect.height+'px';
+     const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,rect.width,rect.height);
+     const W=330,H=445,off=document.createElement('canvas');off.width=W;off.height=H;const o=off.getContext('2d');
+     const bg={dark:'#080b12',red:'#5b1118',blue:'#0b2740',green:'#0b3a2d',light:'#f7f7f5'}[background]||'#080b12';
+     const text=background==='light'?'#101827':'#fff',accent=color||'#ffc51b';
+     o.fillStyle=bg;o.fillRect(0,0,W,H);o.textAlign='center';
+     if(logoImgRef.current)o.drawImage(logoImgRef.current,22,20,70,42);else{o.strokeStyle='#ffffff55';o.strokeRect(22,20,70,42);o.fillStyle='#ffd21f';o.font='700 8px Arial';o.fillText('SUA LOGO',57,45)}
+     o.fillStyle=text;o.font='900 13px Arial';o.fillText(name||'SUA EMPRESA',W/2,72);
+     o.font='900 23px Arial';o.fillText('SUA AVALIAÇÃO',W/2,118);o.fillStyle=accent;o.fillText('É MUITO IMPORTANTE!',W/2,145);
+     o.fillStyle='#ef3340';o.fillRect(85,160,160,4);o.fillStyle=text;o.font='700 11px Arial';o.fillText('Aponte seu celular',W/2,188);o.fillText('ou escaneie o QR Code',W/2,203);
+     o.textAlign='left';o.fillStyle=text;o.font='700 11px Arial';o.fillText('G  Avalie nossa',25,257);o.fillText('     empresa no Google',25,272);
+     if(qrImgRef.current)o.drawImage(qrImgRef.current,220,225,82,82);else{o.strokeStyle=text;o.strokeRect(220,225,82,82)}
+     o.textAlign='center';o.fillStyle=accent;o.font='900 24px Arial';o.fillText('★★★★★',W/2,347);
+     o.fillStyle=background==='light'?'#334155':'#fff';o.font='italic 12px Arial';o.fillText(message||'Sua opinião faz toda a diferença!',W/2,374);
+     o.font='700 9px Arial';o.fillText('♥  Sua opinião faz toda a diferença!',W/2,402);
+     const iw=sceneImgRef.current?.naturalWidth||864,ih=sceneImgRef.current?.naturalHeight||1536;
+     const s=Math.max(rect.width/iw,rect.height/ih),rw=iw*s,rh=ih*s,ox=(rect.width-rw)/2,oy=rect.height-rh;
+     const p=[[.317,.167],[.724,.158],[.812,.490],[.457,.531]].map(([x,y])=>[x*rect.width,y*rect.height]);
+     const affine=(p0,p1,p2,q0,q1,q2)=>{const [x0,y0]=p0,[x1,y1]=p1,[x2,y2]=p2,[u0,v0]=q0,[u1,v1]=q1,[u2,v2]=q2,D=x0*(y1-y2)+x1*(y2-y0)+x2*(y0-y1);return[(u0*(y1-y2)+u1*(y2-y0)+u2*(y0-y1))/D,(u0*(x2-x1)+u1*(x0-x2)+u2*(x1-x0))/D,(u0*(x1*y2-x2*y1)+u1*(x2*y0-x0*y2)+u2*(x0*y1-x1*y0))/D,(v0*(y1-y2)+v1*(y2-y0)+v2*(y0-y1))/D,(v0*(x2-x1)+v1*(x0-x2)+v2*(x1-x0))/D,(v0*(x1*y2-x2*y1)+v1*(x2*y0-x0*y2)+v2*(x0*y1-x1*y0))/D]};
+     const bil=(sx,sy)=>{const[a,b,c,d]=p;return[(1-sx)*(1-sy)*a[0]+sx*(1-sy)*b[0]+sx*sy*c[0]+(1-sx)*sy*d[0],(1-sx)*(1-sy)*a[1]+sx*(1-sy)*b[1]+sx*sy*c[1]+(1-sx)*sy*d[1]]};
+     const cols=24,rows=24;
+     for(let r=0;r<rows;r++)for(let col=0;col<cols;col++){
+       const x0=col*W/cols,y0=r*H/rows,x1=(col+1)*W/cols,y1=(r+1)*H/rows;
+       const q0=bil(x0/W,y0/H),q1=bil(x1/W,y0/H),q2=bil(x1/W,y1/H),q3=bil(x0/W,y1/H);
+       const A=affine([x0,y0],[x1,y0],[x1,y1],q0,q1,q2);
+       ctx.save();ctx.beginPath();ctx.moveTo(...q0);ctx.lineTo(...q1);ctx.lineTo(...q2);ctx.lineTo(...q3);ctx.closePath();ctx.clip();
+       ctx.transform(A[0],A[3],A[1],A[4],A[2],A[5]);ctx.drawImage(off,x0,y0,x1-x0,y1-y0,x0,y0,x1-x0,y1-y0);ctx.restore();
      }
-   };if(img.complete)paint();else img.onload=paint;
-  };draw();const ro=new ResizeObserver(draw);ro.observe(scene);return()=>ro.disconnect();
- },[name,logo,color,background,qr,message,size,ready]);
- return <div ref={sceneRef} className="perspectiveCanvasWrap"><canvas ref={canvasRef}/></div>
+   };
+   draw();const ro=new ResizeObserver(draw);ro.observe(wrap);window.addEventListener('resize',draw);return()=>{ro.disconnect();window.removeEventListener('resize',draw)};
+ },[name,color,background,message,assetsReady]);
+ return <div ref={wrapRef} className="perspectiveCanvasWrap"><canvas ref={canvasRef}/></div>
 }
 
 function Plate({name,logo,color,background,qr,message,size}){return <div className={'plate premiumPlate size-'+size+' bg-'+background} style={{'--plate-color':color}}><div className="plateTop"><div className="logo premiumLogo">{logo?<img src={logo}/>:<div className="logoPlaceholder"><span>SUA LOGO</span></div>}</div><span className="nfcPill"><Wifi size={12}/> NFC</span></div><div className="brandName" title={name}>{name||'SUA EMPRESA'}</div><div className="reviewTitle">SUA AVALIAÇÃO<br/><strong>É MUITO IMPORTANTE!</strong></div><div className="accentLine"/><div className="instruction">Aponte seu celular<br/>ou escaneie o QR Code</div><div className="qrRow"><div className="googleBlock"><span className="googleG">G</span><div>Avalie nossa<br/><b>empresa no Google</b></div></div><div className="qr">{qr?<img src={qr}/>:<div className="qrFake">QR</div>}</div></div><div className="stars"><Star fill="currentColor" size={18}/><Star fill="currentColor" size={18}/><Star fill="currentColor" size={18}/><Star fill="currentColor" size={18}/><Star fill="currentColor" size={18}/></div><div className="plateMessage">{message||'Sua opinião faz toda a diferença!'}</div><div className="plateBottom"><Heart size={14} fill="currentColor"/> Sua opinião faz toda a diferença!</div></div>};
