@@ -3,8 +3,9 @@ import {createRoot} from 'react-dom/client';
 import QRCode from 'qrcode';
 import {Check,ChevronRight,ImagePlus,MessageCircle,Smartphone,Upload,Wifi,Heart,Star,MapPin} from 'lucide-react';
 import './styles.css';
+import scenePhoto from './gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg';
 
-const SCENE_PHOTO='/src/gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg';
+const SCENE_PHOTO=scenePhoto;
 
 const MODELS=[
  {id:'small',name:'Pequena',size:'20 × 30 cm',desc:'Ideal para balcões e mesas',price:59.90},
