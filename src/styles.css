@@ -82,7 +82,7 @@
 .logoMode button.on{border-color:#111827;background:#111827;color:#fff}
 
 
-/* Cenário fotográfico da prévia */
+/* Cenário da prévia: balcão totalmente vazio para apoiar a placa */
 .counterScene{
   position:relative;
   width:min(100%,620px);
@@ -93,20 +93,41 @@
   align-items:flex-end;
   justify-content:center;
   padding:0 0 42px;
-  background-image:url("https://images.unsplash.com/photo-1770991934935-4bdc95292f61?auto=format&fit=crop&fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000");
-  background-size:cover;
-  background-position:center center;
+  background:linear-gradient(180deg,#f7f7f5 0%,#eeeeeb 54%,#d6d0c8 54%,#b8aa9a 100%);
   box-shadow:0 18px 45px #10182818;
+}
+.counterScene:before{
+  content:"";
+  position:absolute;
+  left:-8%;
+  right:-8%;
+  bottom:-10%;
+  height:48%;
+  background:linear-gradient(180deg,#c9beb0 0%,#a89988 100%);
+  transform:perspective(800px) rotateX(58deg);
+  transform-origin:bottom;
+  box-shadow:0 -12px 28px #00000018;
+}
+.counterScene:after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:0;
+  top:54%;
+  height:4px;
+  background:#8f8375;
+  box-shadow:0 2px 8px #00000018;
 }
 .counterSceneOverlay{
   position:absolute;
   inset:0;
-  background:linear-gradient(180deg,#00000018 0%,#00000008 48%,#00000042 100%);
+  z-index:1;
+  background:linear-gradient(180deg,#ffffff10 0%,transparent 60%,#00000016 100%);
   pointer-events:none;
 }
 .counterScene .plateMockup{
   position:relative;
-  z-index:2;
+  z-index:3;
   filter:drop-shadow(0 25px 18px #0009);
   transform:perspective(900px) rotateY(-7deg) rotateX(1deg);
 }
