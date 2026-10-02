@@ -180,4 +180,4 @@
 
 
 /* Modo fundo limpo: somente a fotografia da placa */
-.counterScene .plateMockup{display:none !important;}
+.counterScene .plateMockup{display:block !important;}
