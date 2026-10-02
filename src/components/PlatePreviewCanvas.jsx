@@ -2,8 +2,9 @@ import React,{useEffect,useRef,useState} from 'react';
 import QRCode from 'qrcode';
 import {Wifi} from 'lucide-react';
 import {ART_BACKGROUNDS} from '../data/plateModels';
+import scenePhoto from '../gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg';
 
-const PHOTO='/src/gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg';
+const PHOTO=scenePhoto;
 const PHOTO_POINTS=[[.345,.295],[.715,.278],[.785,.590],[.425,.625]];
 
 export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,compact=false}){
