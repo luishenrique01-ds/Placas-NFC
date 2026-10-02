@@ -123,17 +123,17 @@
   z-index:3;
   width:auto;
   margin:0;
-  top:24%;
-  left:50%;
+  top:15.5%;
+  left:51%;
   transform-origin:center center;
-  transform:translateX(-50%) perspective(1200px) rotateY(-9deg) rotateZ(-3deg) scale(.43,.50);
+  transform:translateX(-50%) perspective(1200px) rotateY(-6deg) rotateZ(-4deg) scale(.43,.41);
   filter:none;
 }
 .counterScene .plateMockup .plate{
   transform-origin:bottom center;
-  box-shadow:
-    0 0 0 2px rgba(208,213,219,.82),
-    inset 0 0 0 1px rgba(255,255,255,.18);
+  box-shadow:none;
+  border:0;
+  border-radius:3px;
 }
 .counterScene .plateMockup:before{
   content:"";
@@ -171,8 +171,8 @@
     padding-bottom:25px;
   }
   .counterScene .plateMockup{
-    top:24%;
-    left:50%;
-    transform:translateX(-50%) perspective(1100px) rotateY(-8deg) rotateZ(-3deg) scale(.43,.50);
+    top:15.5%;
+    left:51%;
+    transform:translateX(-50%) perspective(1100px) rotateY(-6deg) rotateZ(-4deg) scale(.43,.41);
   }
 }
