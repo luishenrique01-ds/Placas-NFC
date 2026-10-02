@@ -1,15 +1,25 @@
 import React,{useEffect,useRef,useState} from 'react';
 import QRCode from 'qrcode';
-import {Wifi} from 'lucide-react';
 import {ART_BACKGROUNDS} from '../data/plateModels';
 import scenePhoto from '../gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg';
 
 const PHOTO=scenePhoto;
-// Corners of the physical plaque in the counter photo (normalized to the rendered scene).\n// Kept inside the acrylic frame so the personalized artwork does not spill outside it.\nconst PHOTO_POINTS=[[.390,.305],[.675,.292],[.705,.575],[.425,.610]];
+
+// Pontos normalizados na FOTO ORIGINAL.
+// Ordem: topo-esquerdo, topo-direito, baixo-direito, baixo-esquerdo.
+const PHOTO_POINTS_SOURCE=[[.390,.305],[.675,.292],[.705,.575],[.425,.610]];
+
+// Quando configurada, a API PHP passa a ser o renderizador principal.
+// Ex.: VITE_PHP_RENDERER_URL=https://seu-dominio.com/api/generate-plate.php
+const PHP_RENDERER_URL=(import.meta.env.VITE_PHP_RENDERER_URL||'').trim();
 
 export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,modelId='traditional',compact=false}){
  const canvasRef=useRef(null),wrapRef=useRef(null),sceneRef=useRef(null),logoRef=useRef(null),qrRef=useRef(null);
  const [ready,setReady]=useState(false);
+ const [phpImage,setPhpImage]=useState('');
+ const [phpLoading,setPhpLoading]=useState(false);
+ const [phpError,setPhpError]=useState('');
+
  useEffect(()=>{
   let alive=true;setReady(false);
   const load=(src,ref)=>new Promise(resolve=>{
@@ -21,9 +31,50 @@ export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,mod
   Promise.all([load(PHOTO,sceneRef),load(logo,logoRef),qrPromise]).then(()=>alive&&setReady(true));
   return()=>{alive=false};
  },[logo,reviewUrl]);
+
+ // Renderização no PHP. O Canvas continua como fallback local enquanto a URL PHP
+ // não estiver configurada ou se a API estiver indisponível.
  useEffect(()=>{
-  if(!ready)return;
-  const wrap=wrapRef.current,canvas=canvasRef.current;if(!wrap||!canvas||!sceneRef.current)return;
+  if(!ready||!PHP_RENDERER_URL)return;
+  let alive=true;
+  const run=async()=>{
+   setPhpLoading(true);
+   setPhpError('');
+   try{
+    const qrSource=qrRef.current?qrRef.current.src:'';
+    const response=await fetch(PHP_RENDERER_URL,{
+     method:'POST',
+     headers:{'Content-Type':'application/json'},
+     body:JSON.stringify({
+      name:name||'SUA EMPRESA',
+      background:(ART_BACKGROUNDS.find(x=>x.id===backgroundId)||ART_BACKGROUNDS[0]).value,
+      logoDataUrl:logo||'',
+      qrDataUrl:qrSource,
+      reviewUrl:reviewUrl||'',
+      modelId,
+      points:PHOTO_POINTS_SOURCE
+     })
+    });
+    const data=await response.json();
+    if(!response.ok||!data.ok||!data.image)throw new Error(data.error||'O renderizador PHP não retornou uma imagem.');
+    if(alive)setPhpImage(data.image);
+   }catch(error){
+    if(alive){
+     setPhpImage('');
+     setPhpError(error instanceof Error?error.message:'Falha ao chamar o PHP');
+    }
+   }finally{
+    if(alive)setPhpLoading(false);
+   }
+  };
+  run();
+  return()=>{alive=false};
+ },[ready,name,logo,backgroundId,reviewUrl,modelId]);
+
+ useEffect(()=>{
+  if(!ready||PHP_RENDERER_URL&&phpImage)return;
+  const wrap=wrapRef.current,canvas=canvasRef.current;
+  if(!wrap||!canvas||!sceneRef.current)return;
   const draw=()=>{
    const rect=wrap.getBoundingClientRect(),W=Math.max(1,Math.round(rect.width)),H=Math.max(1,Math.round(rect.height)),dpr=Math.min(devicePixelRatio||1,2);
    canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';
@@ -43,7 +94,10 @@ export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,mod
    if(qrRef.current)a.drawImage(qrRef.current,650,675,255,255);
    a.textAlign='center';a.fillStyle=backgroundId==='transparent'?'#dc2626':'#ffc51b';a.font='900 70px Arial';a.fillText('★★★★★',PW/2,1015);a.fillStyle=fg;a.font='italic 34px Arial';a.fillText('Sua opinião faz toda a diferença!',PW/2,1080);a.font='700 25px Arial';a.fillText('♥  Sua opinião faz toda a diferença!',PW/2,1250);
    if(modelId==='wood'||modelId==='blackBase'){a.fillStyle=modelId==='wood'?'#9a6b43':'#080808';a.fillRect(0,1290,PW,85);a.fillStyle='rgba(255,255,255,.18)';a.fillRect(0,1290,PW,3)}
-   const p=PHOTO_POINTS.map(([x,y])=>[x*W,y*H]);
+
+   // Fallback local: os mesmos pontos da foto original são convertidos para
+   // a transformação "cover" usada para desenhar a foto no Canvas.
+   const p=PHOTO_POINTS_SOURCE.map(([x,y])=>[dx+x*dw,dy+y*dh]);
    const bilinear=(u,v)=>{const[t,r,b,l]=p;return[t[0]*(1-u)*(1-v)+r[0]*u*(1-v)+b[0]*u*v+l[0]*(1-u)*v,t[1]*(1-u)*(1-v)+r[1]*u*(1-v)+b[1]*u*v+l[1]*(1-u)*v]};
    const affine=(s0,s1,s2,d0,d1,d2)=>{const[x0,y0]=s0,[x1,y1]=s1,[x2,y2]=s2,[u0,v0]=d0,[u1,v1]=d1,[u2,v2]=d2,den=x0*(y1-y2)+x1*(y2-y0)+x2*(y0-y1);return[(u0*(y1-y2)+u1*(y2-y0)+u2*(y0-y1))/den,(u0*(x2-x1)+u1*(x0-x2)+u2*(x1-x0))/den,(u0*(x1*y2-x2*y1)+u1*(x2*y0-x0*y2)+u2*(x0*y1-x1*y0))/den,(v0*(y1-y2)+v1*(y2-y0)+v2*(y0-y1))/den,(v0*(x2-x1)+v1*(x0-x2)+v2*(x1-x0))/den,(v0*(x1*y2-x2*y1)+v1*(x2*y0-x0*y2)+v2*(x0*y1-x1*y0))/den]};
    const cols=48,rows=64;
@@ -51,6 +105,15 @@ export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,mod
    const gloss=ctx.createLinearGradient(0,0,W,H);gloss.addColorStop(0,'rgba(255,255,255,.10)');gloss.addColorStop(.35,'rgba(255,255,255,0)');gloss.addColorStop(.75,'rgba(255,255,255,.04)');gloss.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=gloss;ctx.fillRect(0,0,W,H);
   };
   draw();const ro=new ResizeObserver(draw);ro.observe(wrap);window.addEventListener('resize',draw);return()=>{ro.disconnect();window.removeEventListener('resize',draw)}
- },[ready,name,backgroundId,modelId]);
- return <div ref={wrapRef} className={'plateCanvasWrap '+(compact?'compact':'')}><canvas ref={canvasRef}/></div>
+ },[ready,name,backgroundId,modelId,phpImage]);
+
+ return <div ref={wrapRef} className={'plateCanvasWrap '+(compact?'compact':'')}>
+   {PHP_RENDERER_URL&&phpImage ? (
+     <img src={phpImage} alt="Prévia da placa personalizada" style={{display:'block',width:'100%',height:'100%',objectFit:'contain'}}/>
+   ) : (
+     <canvas ref={canvasRef}/>
+   )}
+   {PHP_RENDERER_URL&&phpLoading&&<div className="plateRenderStatus">Gerando prévia...</div>}
+   {PHP_RENDERER_URL&&phpError&&<div className="plateRenderStatus">PHP: {phpError}</div>}
+ </div>
 }
