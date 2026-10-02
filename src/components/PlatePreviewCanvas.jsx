@@ -5,7 +5,7 @@ import {ART_BACKGROUNDS} from '../data/plateModels';
 import scenePhoto from '../gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg';
 
 const PHOTO=scenePhoto;
-const PHOTO_POINTS=[[.345,.295],[.715,.278],[.785,.590],[.425,.625]];
+// Corners of the physical plaque in the counter photo (normalized to the rendered scene).\n// Kept inside the acrylic frame so the personalized artwork does not spill outside it.\nconst PHOTO_POINTS=[[.390,.305],[.675,.292],[.705,.575],[.425,.610]];
 
 export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,modelId='traditional',compact=false}){
  const canvasRef=useRef(null),wrapRef=useRef(null),sceneRef=useRef(null),logoRef=useRef(null),qrRef=useRef(null);
