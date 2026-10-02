@@ -155,29 +155,38 @@
   }
 }
 
-/* Encaixe preciso da personalização na face da placa física da foto */
-.counterScene:before{display:none;}
+/* Encaixe da personalização na área branca da placa física */
 .counterScene .plateMockup{
+  display:block !important;
+  position:absolute;
   z-index:3;
-  top:15.8%;
-  left:49.0%;
-  transform:translateX(-50%) perspective(950px) rotateY(-10deg) rotateX(1deg) rotateZ(-4deg) scale(.78,.88);
+  width:330px;
+  top:16.5%;
+  left:49.2%;
+  margin:0;
   transform-origin:center top;
+  transform:translateX(-50%) perspective(1100px) rotateY(-7deg) rotateX(1deg) rotateZ(-4deg) scale(.72,.80);
   filter:none;
 }
 .counterScene .plateMockup .plate{
-  box-shadow:none;
+  width:330px;
+  height:445px;
+  padding:24px;
+  box-sizing:border-box;
   border:0;
   border-radius:2px;
+  box-shadow:none;
+  transform:none;
+  clip-path:polygon(7% 3%,94% 0%,100% 93%,23% 100%);
 }
+.counterScene .plateMockup:before,
+.counterScene .plateMockup:after{display:none;}
 @media(max-width:520px){
   .counterScene .plateMockup{
-    top:15.8%;
-    left:49.0%;
-    transform:translateX(-50%) perspective(950px) rotateY(-10deg) rotateX(1deg) rotateZ(-4deg) scale(.78,.88);
+    top:16.5%;
+    left:49.2%;
+    transform:translateX(-50%) perspective(1100px) rotateY(-7deg) rotateX(1deg) rotateZ(-4deg) scale(.72,.80);
   }
 }
-
-
 /* Modo fundo limpo: somente a fotografia da placa */
 .counterScene .plateMockup{display:block !important;}
