@@ -27,3 +27,34 @@
  .plate.size-large{width:300px;height:415px}
  .backgrounds{grid-template-columns:repeat(5,1fr)}
 }
+
+/* Contraste automático dos textos por fundo */
+.plate.bg-dark,.plate.bg-red,.plate.bg-blue,.plate.bg-green{
+  --text-main:#ffffff;
+  --text-soft:#f3f4f6;
+  --accent:#ffc51b;
+  --accent2:#ef4444;
+}
+.plate.bg-light{
+  --text-main:#111827;
+  --text-soft:#374151;
+  --accent:#d97706;
+  --accent2:#dc2626;
+  background:linear-gradient(145deg,#fffdf8,#e7e3d8 78%);
+}
+.plate{color:var(--text-main)}
+.plate .brandName,
+.plate .reviewTitle,
+.plate .instruction,
+.plate .googleBlock,
+.plate .plateMessage,
+.plate .plateBottom{color:var(--text-main)}
+.plate .nfcPill{color:var(--text-main)}
+.plate .reviewTitle strong{color:var(--accent)}
+.plate .accentLine{background:linear-gradient(90deg,var(--accent2),var(--accent))}
+.plate .plateBottom{opacity:.9}
+.plate.bg-light .nfcPill{border-color:#11182740;background:#11182708}
+.plate.bg-light .premiumLogo{border-color:#11182755;background:#ffffffaa}
+.plate.bg-light .logoPlaceholder{color:#b45309}
+.plate.bg-light .plateGlow{background:#ffffff80}
+.plate.bg-red .plateGlow,.plate.bg-blue .plateGlow,.plate.bg-green .plateGlow{background:#ffffff12}
