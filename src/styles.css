@@ -178,23 +178,12 @@
 }
 
 /* Encaixe preciso da personalização na face da placa física da foto */
-.counterScene:before{
-  content:"";
-  position:absolute;
-  z-index:2;
-  pointer-events:none;
-  left:0;
-  top:0;
-  width:100%;
-  height:100%;
-  background:linear-gradient(180deg,#fdfdfc 0%,#f7f7f5 100%);
-  clip-path:polygon(31.8% 18.9%,60.6% 17.6%,69.2% 47.7%,39.7% 52.5%);
-}
+.counterScene:before{display:none;}
 .counterScene .plateMockup{
   z-index:3;
-  top:13.2%;
-  left:49.6%;
-  transform:translateX(-50%) perspective(900px) rotateY(-7deg) rotateX(2deg) rotateZ(-4deg) scale(.72,.80);
+  top:17.8%;
+  left:50.2%;
+  transform:translateX(-50%) perspective(900px) rotateY(-6deg) rotateX(1deg) rotateZ(-4deg) scale(.45,.48);
   transform-origin:center top;
   filter:none;
 }
@@ -208,8 +197,8 @@
     clip-path:polygon(31.8% 18.9%,60.6% 17.6%,69.2% 47.7%,39.7% 52.5%);
   }
   .counterScene .plateMockup{
-    top:13.2%;
-    left:49.6%;
-    transform:translateX(-50%) perspective(900px) rotateY(-7deg) rotateX(2deg) rotateZ(-4deg) scale(.72,.80);
+    top:17.8%;
+    left:50.2%;
+    transform:translateX(-50%) perspective(900px) rotateY(-6deg) rotateX(1deg) rotateZ(-4deg) scale(.45,.48);
   }
 }
