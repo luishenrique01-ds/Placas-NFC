@@ -26,7 +26,7 @@ function App(){
  const [orderReady,setOrderReady]=useState(false);
 
  const generateQR=async(url)=>{try{setQr(await QRCode.toDataURL(url||'https://google.com',{width:220,margin:1}));}catch{}};
- useMemo(()=>{generateQR(link)},[link]);
+ useEffect(()=>{generateQR(link)},[link]);
 
  const continueOrder=()=>{
   if(!name.trim()){alert('Digite o nome da empresa.');return;}
