@@ -192,9 +192,9 @@
 }
 .counterScene .plateMockup{
   z-index:3;
-  top:14.8%;
-  left:50.7%;
-  transform:translateX(-50%) rotate(-4deg) skewX(3deg) scale(.61,.70);
+  top:13.2%;
+  left:49.6%;
+  transform:translateX(-50%) perspective(900px) rotateY(-7deg) rotateX(2deg) rotateZ(-4deg) scale(.72,.80);
   transform-origin:center top;
   filter:none;
 }
@@ -208,8 +208,8 @@
     clip-path:polygon(31.8% 18.9%,60.6% 17.6%,69.2% 47.7%,39.7% 52.5%);
   }
   .counterScene .plateMockup{
-    top:14.8%;
-    left:50.7%;
-    transform:translateX(-50%) rotate(-4deg) skewX(3deg) scale(.61,.70);
+    top:13.2%;
+    left:49.6%;
+    transform:translateX(-50%) perspective(900px) rotateY(-7deg) rotateX(2deg) rotateZ(-4deg) scale(.72,.80);
   }
 }
