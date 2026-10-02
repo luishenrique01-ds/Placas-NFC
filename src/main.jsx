@@ -149,7 +149,6 @@ function PerspectivePlateCanvas({name,logo,color,background,qr,message,size}){
     const x0=c*PW/cols,y0=r*PH/rows,x1=(c+1)*PW/cols,y1=(r+1)*PH/rows;
     const q0=bilinear(x0/PW,y0/PH),q1=bilinear(x1/PW,y0/PH),q2=bilinear(x1/PW,y1/PH),q3=bilinear(x0/PW,y1/PH);
     const m=affine([x0,y0],[x1,y0],[x1,y1],q0,q1,q2);
-    a.save?.();
     ctx.save();ctx.beginPath();ctx.moveTo(q0[0],q0[1]);ctx.lineTo(q1[0],q1[1]);ctx.lineTo(q2[0],q2[1]);ctx.lineTo(q3[0],q3[1]);ctx.closePath();ctx.clip();
     ctx.transform(m[0],m[3],m[1],m[4],m[2],m[5]);
     ctx.drawImage(art,x0,y0,x1-x0,y1-y0,x0,y0,x1-x0,y1-y0);
