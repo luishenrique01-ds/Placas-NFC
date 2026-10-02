@@ -82,11 +82,50 @@
 .logoMode button.on{border-color:#111827;background:#111827;color:#fff}
 
 
-/* Área de produto: balcão discreto + placa em destaque */
-.productStage{position:relative;width:min(100%,620px);height:560px;border-radius:26px;overflow:hidden;background:linear-gradient(180deg,#f5f6f8 0%,#e9edf2 66%,#c58f61 66%,#a96f43 100%);display:flex;align-items:flex-start;justify-content:center;padding-top:42px;box-shadow:0 18px 45px #10182818}
-.productStage:before{content:"";position:absolute;inset:0 0 34% 0;background:radial-gradient(circle at 30% 30%,#fff 0 2%,transparent 22%),linear-gradient(135deg,#fafbfc,#e2e7ed)}
-.productCounter{position:absolute;left:-5%;right:-5%;bottom:-18%;height:47%;background:repeating-linear-gradient(90deg,#8e5c35 0,#a87345 20px,#8d5a34 40px);transform:perspective(600px) rotateX(58deg);transform-origin:bottom;box-shadow:0 -15px 30px #0003}
-.plateMockup{position:relative;z-index:2;filter:drop-shadow(0 24px 18px #0006);transform:perspective(900px) rotateY(-6deg)}
-.plateMockup:after{content:"";position:absolute;left:8%;right:8%;bottom:-24px;height:35px;background:#0006;filter:blur(14px);border-radius:50%;z-index:-1}
-.plateMockup .plate{box-shadow:0 5px 0 #0008,0 0 0 6px #d7dce2}
-@media(max-width:520px){.productStage{height:500px;padding-top:30px}.plateMockup{transform:perspective(900px) rotateY(-4deg) scale(.88)}}
+/* Cenário fotográfico da prévia */
+.counterScene{
+  position:relative;
+  width:min(100%,620px);
+  height:560px;
+  border-radius:24px;
+  overflow:hidden;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding:0 0 42px;
+  background-image:url("https://images.pexels.com/photos/12689350/pexels-photo-12689350.jpeg?cs=srgb&dl=pexels-tkirkgoz-12689350.jpg&fm=jpg");
+  background-size:cover;
+  background-position:center center;
+  box-shadow:0 18px 45px #10182818;
+}
+.counterSceneOverlay{
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,#00000018 0%,#00000008 48%,#00000042 100%);
+  pointer-events:none;
+}
+.counterScene .plateMockup{
+  position:relative;
+  z-index:2;
+  filter:drop-shadow(0 25px 18px #0009);
+  transform:perspective(900px) rotateY(-7deg) rotateX(1deg);
+}
+.counterScene .plateMockup:after{
+  content:"";
+  position:absolute;
+  left:8%;
+  right:8%;
+  bottom:-24px;
+  height:35px;
+  background:#0008;
+  filter:blur(14px);
+  border-radius:50%;
+  z-index:-1;
+}
+.counterScene .plateMockup .plate{
+  box-shadow:0 8px 0 #0008,0 0 0 5px #d7dce2;
+}
+@media(max-width:520px){
+  .counterScene{height:500px;padding-bottom:30px}
+  .counterScene .plateMockup{transform:perspective(900px) rotateY(-5deg) scale(.88)}
+}
