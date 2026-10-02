@@ -190,3 +190,8 @@
 }
 /* Modo fundo limpo: somente a fotografia da placa */
 .counterScene .plateMockup{display:block !important;}
+
+
+/* Preview em Canvas: a arte é projetada pelos quatro cantos da face branca da placa */
+.perspectiveCanvasWrap{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
+.perspectiveCanvasWrap canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
