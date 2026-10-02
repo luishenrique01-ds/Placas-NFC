@@ -107,7 +107,7 @@
   border-radius:0;
   background-image:
     linear-gradient(180deg,rgba(255,255,255,.03),transparent 45%,rgba(0,0,0,.13)),
-    url("https://res-4.cloudinary.com/cre/image/fetch/w_984%2Ch_558%2Cc_limit%2Cf_auto%2Cq_auto%2Cd_placeholder_viubzx.png/https%3A/bucket-api.commercialrealestate.com.au/v1/bucket/image/17573043_3_1_260111_120135-w1600-h1066");
+    url("/src/gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg");
   background-size:cover;
   background-position:center bottom;
 }
