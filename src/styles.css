@@ -159,9 +159,9 @@
 .counterScene:before{display:none;}
 .counterScene .plateMockup{
   z-index:3;
-  top:18.2%;
-  left:48.2%;
-  transform:translateX(-50%) perspective(900px) rotateY(-8deg) rotateX(1deg) rotateZ(-4.2deg) scale(.37,.41);
+  top:15.8%;
+  left:49.0%;
+  transform:translateX(-50%) perspective(950px) rotateY(-10deg) rotateX(1deg) rotateZ(-4deg) scale(.78,.88);
   transform-origin:center top;
   filter:none;
 }
@@ -172,9 +172,9 @@
 }
 @media(max-width:520px){
   .counterScene .plateMockup{
-    top:18.2%;
-    left:48.2%;
-    transform:translateX(-50%) perspective(900px) rotateY(-8deg) rotateX(1deg) rotateZ(-4.2deg) scale(.37,.41);
+    top:15.8%;
+    left:49.0%;
+    transform:translateX(-50%) perspective(950px) rotateY(-10deg) rotateX(1deg) rotateZ(-4deg) scale(.78,.88);
   }
 }
 
