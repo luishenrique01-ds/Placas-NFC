@@ -123,10 +123,10 @@ function PerspectivePlateCanvas({name,logo,color,background,qr,message,size}){
    // Quatro pontos da face branca, em coordenadas relativas ao Canvas.
    // O restante da placa (acrílico e suporte) continua sendo a foto original.
    const p=[
-    [W*.325,H*.275],
-    [W*.735,H*.255],
-    [W*.815,H*.610],
-    [W*.420,H*.655]
+    [W*.345,H*.295],
+    [W*.715,H*.278],
+    [W*.785,H*.590],
+    [W*.425,H*.625]
    ];
    const bilinear=(u,v)=>{
     const [tl,tr,br,bl]=p;
