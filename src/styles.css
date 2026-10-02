@@ -155,43 +155,44 @@
   }
 }
 
-/* Encaixe da personalização na área branca da placa física */
+/* Preview final: personalização dentro da face branca fotografada */
 .counterScene .plateMockup{
   display:block !important;
   position:absolute;
   z-index:3;
-  width:330px;
-  top:16.5%;
-  left:49.2%;
+  left:49.3%;
+  top:18.0%;
+  width:286px;
   margin:0;
-  transform-origin:center top;
-  transform:translateX(-50%) perspective(1100px) rotateY(-7deg) rotateX(1deg) rotateZ(-4deg) scale(.72,.80);
+  transform-origin:50% 0;
+  transform:translateX(-50%) rotate(-4deg) skewX(-1.8deg) scaleY(.96);
   filter:none;
 }
 .counterScene .plateMockup .plate{
-  width:330px;
-  height:445px;
-  padding:24px;
+  width:286px;
+  height:392px;
+  padding:20px;
   box-sizing:border-box;
   border:0;
-  border-radius:2px;
+  border-radius:0;
   box-shadow:none;
   transform:none;
-  clip-path:polygon(7% 3%,94% 0%,100% 93%,23% 100%);
+  clip-path:polygon(7% 1.5%,93.5% 0%,100% 93%,21% 100%);
+}
+.counterScene .plateMockup .plate .plateInner{
+  border:1px solid rgba(255,255,255,.22);
 }
 .counterScene .plateMockup:before,
 .counterScene .plateMockup:after{display:none;}
 @media(max-width:520px){
   .counterScene .plateMockup{
-    top:16.5%;
-    left:49.2%;
-    transform:translateX(-50%) perspective(1100px) rotateY(-7deg) rotateX(1deg) rotateZ(-4deg) scale(.72,.80);
+    left:49.3%;
+    top:18.0%;
+    width:286px;
+    transform:translateX(-50%) rotate(-4deg) skewX(-1.8deg) scaleY(.96);
+  }
+  .counterScene .plateMockup .plate{
+    width:286px;
+    height:392px;
   }
 }
-/* Modo fundo limpo: somente a fotografia da placa */
-.counterScene .plateMockup{display:block !important;}
-
-
-/* Preview em Canvas: a arte é projetada pelos quatro cantos da face branca da placa */
-.perspectiveCanvasWrap{position:absolute;inset:0;z-index:3;pointer-events:none;overflow:hidden}
-.perspectiveCanvasWrap canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
