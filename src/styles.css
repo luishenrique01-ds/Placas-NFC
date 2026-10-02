@@ -181,9 +181,9 @@
 .counterScene:before{display:none;}
 .counterScene .plateMockup{
   z-index:3;
-  top:17.8%;
-  left:50.2%;
-  transform:translateX(-50%) perspective(900px) rotateY(-6deg) rotateX(1deg) rotateZ(-4deg) scale(.45,.48);
+  top:18.4%;
+  left:49.0%;
+  transform:translateX(-50%) perspective(900px) rotateY(-6deg) rotateX(1deg) rotateZ(-4deg) scale(.40,.44);
   transform-origin:center top;
   filter:none;
 }
