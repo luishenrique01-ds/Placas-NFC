@@ -82,7 +82,7 @@
 .logoMode button.on{border-color:#111827;background:#111827;color:#fff}
 
 
-/* Cenário da prévia: balcão totalmente vazio para apoiar a placa */
+/* Cenário fotográfico: balcão realista e vazio para apoiar a placa */
 .counterScene{
   position:relative;
   width:min(100%,620px);
@@ -92,61 +92,66 @@
   display:flex;
   align-items:flex-end;
   justify-content:center;
-  padding:0 0 42px;
-  background:linear-gradient(180deg,#f7f7f5 0%,#eeeeeb 54%,#d6d0c8 54%,#b8aa9a 100%);
-  box-shadow:0 18px 45px #10182818;
-}
-.counterScene:before{
-  content:"";
-  position:absolute;
-  left:-8%;
-  right:-8%;
-  bottom:-10%;
-  height:48%;
-  background:linear-gradient(180deg,#c9beb0 0%,#a89988 100%);
-  transform:perspective(800px) rotateX(58deg);
-  transform-origin:bottom;
-  box-shadow:0 -12px 28px #00000018;
-}
-.counterScene:after{
-  content:"";
-  position:absolute;
-  left:0;
-  right:0;
-  top:54%;
-  height:4px;
-  background:#8f8375;
-  box-shadow:0 2px 8px #00000018;
+  padding:0 0 38px;
+  background-image:
+    linear-gradient(180deg,rgba(12,14,18,.08) 0%,rgba(12,14,18,.02) 46%,rgba(12,14,18,.28) 100%),
+    url("https://images.unsplash.com/photo-1770991934935-4bdc95292f61?auto=format&fit=crop&w=1400&q=85");
+  background-size:cover;
+  background-position:center bottom;
+  box-shadow:0 22px 50px rgba(16,24,40,.22);
 }
 .counterSceneOverlay{
   position:absolute;
   inset:0;
   z-index:1;
-  background:linear-gradient(180deg,#ffffff10 0%,transparent 60%,#00000016 100%);
   pointer-events:none;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.08),transparent 42%),
+    linear-gradient(0deg,rgba(0,0,0,.18),transparent 34%);
 }
 .counterScene .plateMockup{
   position:relative;
   z-index:3;
-  filter:drop-shadow(0 25px 18px #0009);
-  transform:perspective(900px) rotateY(-7deg) rotateX(1deg);
+  transform:perspective(900px) rotateY(-18deg) rotateX(2deg) translateY(5px);
+  transform-origin:bottom center;
+  filter:drop-shadow(0 24px 16px rgba(0,0,0,.62));
+}
+.counterScene .plateMockup:before{
+  content:"";
+  position:absolute;
+  left:5%;
+  right:5%;
+  bottom:-7px;
+  height:15px;
+  background:rgba(0,0,0,.48);
+  filter:blur(7px);
+  border-radius:50%;
+  z-index:-1;
 }
 .counterScene .plateMockup:after{
   content:"";
   position:absolute;
-  left:8%;
-  right:8%;
-  bottom:-24px;
-  height:35px;
-  background:#0008;
-  filter:blur(14px);
+  left:12%;
+  right:12%;
+  bottom:-21px;
+  height:25px;
+  background:rgba(0,0,0,.52);
+  filter:blur(13px);
   border-radius:50%;
-  z-index:-1;
+  z-index:-2;
 }
 .counterScene .plateMockup .plate{
-  box-shadow:0 8px 0 #0008,0 0 0 5px #d7dce2;
+  box-shadow:
+    0 5px 0 rgba(0,0,0,.72),
+    0 0 0 4px rgba(215,220,226,.95),
+    inset 0 0 0 1px rgba(255,255,255,.28);
 }
 @media(max-width:520px){
-  .counterScene{height:500px;padding-bottom:30px}
-  .counterScene .plateMockup{transform:perspective(900px) rotateY(-5deg) scale(.88)}
+  .counterScene{
+    height:500px;
+    padding-bottom:28px;
+  }
+  .counterScene .plateMockup{
+    transform:perspective(900px) rotateY(-13deg) rotateX(2deg) scale(.88) translateY(4px);
+  }
 }
