@@ -135,30 +135,8 @@
   border:0;
   border-radius:3px;
 }
-.counterScene .plateMockup:before{
-  content:"";
-  position:absolute;
-  left:8%;
-  right:0;
-  bottom:-5px;
-  height:11px;
-  border-radius:50%;
-  background:rgba(0,0,0,.42);
-  filter:blur(6px);
-  z-index:-1;
-}
-.counterScene .plateMockup:after{
-  content:"";
-  position:absolute;
-  left:20%;
-  right:5%;
-  bottom:-11px;
-  height:18px;
-  border-radius:50%;
-  background:rgba(0,0,0,.27);
-  filter:blur(10px);
-  z-index:-2;
-}
+.counterScene .plateMockup:before,
+.counterScene .plateMockup:after{display:none;}
 .previewNote{
   margin:0;
   padding:14px 20px 18px;
@@ -193,9 +171,6 @@
   border-radius:2px;
 }
 @media(max-width:520px){
-  .counterScene:before{
-    clip-path:polygon(31.8% 18.9%,60.6% 17.6%,69.2% 47.7%,39.7% 52.5%);
-  }
   .counterScene .plateMockup{
     top:18.2%;
     left:48.2%;
