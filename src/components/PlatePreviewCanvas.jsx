@@ -13,7 +13,7 @@ const PHOTO_POINTS_SOURCE=[[.390,.305],[.675,.292],[.705,.575],[.425,.610]];
 // Ex.: VITE_PHP_RENDERER_URL=https://seu-dominio.com/api/generate-plate.php
 const PHP_RENDERER_URL=(import.meta.env.VITE_PHP_RENDERER_URL||'').trim();
 
-export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,modelId='traditional',compact=false}){
+export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,modelId='traditional',compact=false,points=PHOTO_POINTS_SOURCE}){
  const canvasRef=useRef(null),wrapRef=useRef(null),sceneRef=useRef(null),logoRef=useRef(null),qrRef=useRef(null);
  const [ready,setReady]=useState(false);
  const [phpImage,setPhpImage]=useState('');
@@ -52,7 +52,7 @@ export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,mod
       qrDataUrl:qrSource,
       reviewUrl:reviewUrl||'',
       modelId,
-      points:PHOTO_POINTS_SOURCE
+      points:points
      })
     });
     const data=await response.json();
@@ -97,7 +97,7 @@ export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,mod
 
    // Fallback local: os mesmos pontos da foto original são convertidos para
    // a transformação "cover" usada para desenhar a foto no Canvas.
-   const p=PHOTO_POINTS_SOURCE.map(([x,y])=>[dx+x*dw,dy+y*dh]);
+   const p=points.map(([x,y])=>[dx+x*dw,dy+y*dh]);
    const bilinear=(u,v)=>{const[t,r,b,l]=p;return[t[0]*(1-u)*(1-v)+r[0]*u*(1-v)+b[0]*u*v+l[0]*(1-u)*v,t[1]*(1-u)*(1-v)+r[1]*u*(1-v)+b[1]*u*v+l[1]*(1-u)*v]};
    const affine=(s0,s1,s2,d0,d1,d2)=>{const[x0,y0]=s0,[x1,y1]=s1,[x2,y2]=s2,[u0,v0]=d0,[u1,v1]=d1,[u2,v2]=d2,den=x0*(y1-y2)+x1*(y2-y0)+x2*(y0-y1);return[(u0*(y1-y2)+u1*(y2-y0)+u2*(y0-y1))/den,(u0*(x2-x1)+u1*(x0-x2)+u2*(x1-x0))/den,(u0*(x1*y2-x2*y1)+u1*(x2*y0-x0*y2)+u2*(x0*y1-x1*y0))/den,(v0*(y1-y2)+v1*(y2-y0)+v2*(y0-y1))/den,(v0*(x2-x1)+v1*(x0-x2)+v2*(x1-x0))/den,(v0*(x1*y2-x2*y1)+v1*(x2*y0-x0*y2)+v2*(x0*y1-x1*y0))/den]};
    const cols=48,rows=64;
@@ -105,7 +105,7 @@ export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,mod
    const gloss=ctx.createLinearGradient(0,0,W,H);gloss.addColorStop(0,'rgba(255,255,255,.10)');gloss.addColorStop(.35,'rgba(255,255,255,0)');gloss.addColorStop(.75,'rgba(255,255,255,.04)');gloss.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=gloss;ctx.fillRect(0,0,W,H);
   };
   draw();const ro=new ResizeObserver(draw);ro.observe(wrap);window.addEventListener('resize',draw);return()=>{ro.disconnect();window.removeEventListener('resize',draw)}
- },[ready,name,backgroundId,modelId,phpImage]);
+ },[ready,name,backgroundId,modelId,phpImage,points]);
 
  return <div ref={wrapRef} className={'plateCanvasWrap '+(compact?'compact':'')}>
    {PHP_RENDERER_URL&&phpImage ? (
