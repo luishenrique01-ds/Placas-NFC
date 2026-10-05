@@ -1,6 +1,6 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import PlatePreviewCanvas from './PlatePreviewCanvas';
-import {ART_BACKGROUNDS} from '../data/plateModels';
+import scenePhoto from '../gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg';
 
 const DEFAULT_POINTS=[[.390,.305],[.675,.292],[.705,.575],[.425,.610]];
 const KEY='placas-nfc-photo-points';
@@ -68,7 +68,7 @@ export default function AdminPanel(){
    <section className="adminCard">
     <div className="adminCardHead"><div><h2>Foto de referência</h2><p>Os pontos vermelhos definem onde a arte será encaixada.</p></div><label className="zoomControl">Zoom <input type="range" min="1" max="2.5" step=".05" value={zoom} onChange={e=>setZoom(Number(e.target.value))}/><b>{zoom.toFixed(2)}×</b></label></div>
     <div ref={frameRef} className="adminPhotoFrame">
-     <img ref={imgRef} src={import.meta.env.BASE_URL+'src/gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg'} alt="Foto de referência do balcão" onLoad={e=>setImageSize({w:e.currentTarget.naturalWidth,h:e.currentTarget.naturalHeight})}/>
+     <img ref={imgRef} src={scenePhoto} alt="Foto de referência do balcão" onLoad={e=>setImageSize({w:e.currentTarget.naturalWidth,h:e.currentTarget.naturalHeight})}/>
      {draft.map((p,i)=>{const [x,y]=toScreen(p);return <button key={i} type="button" className={'pointHandle p'+i+(active===i?' active':'')} style={{left:x,top:y}} onPointerDown={e=>startDrag(e,i)} aria-label={LABELS[i]}><span>{i+1}</span></button>})}
      <div className="pointLine l0"/><div className="pointLine l1"/><div className="pointLine l2"/><div className="pointLine l3"/>
     </div>
