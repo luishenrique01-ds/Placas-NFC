@@ -14,19 +14,10 @@ const MODELS=[
 function App(){
  const [model,setModel]=useState(MODELS[0]);
  const [admin,setAdmin]=useState(()=>window.location.hash==='#admin');
- const [menuOpen,setMenuOpen]=useState(false);
- const [passwordOpen,setPasswordOpen]=useState(false);
- const [password,setPassword]=useState('');
- const [passwordError,setPasswordError]=useState('');
  useEffect(()=>{const onHash=()=>setAdmin(window.location.hash==='#admin');window.addEventListener('hashchange',onHash);return()=>window.removeEventListener('hashchange',onHash)},[]);
  if(admin)return <AdminPanel/>;
- const openAdmin=()=>{setMenuOpen(false);setPassword('');setPasswordError('');setPasswordOpen(true)};
- const enterAdmin=()=>{if(password==='123'){setPasswordOpen(false);setPassword('');setPasswordError('');window.location.hash='admin'}else setPasswordError('Senha incorreta.');};
  return <div className="app">
   <header className="nav"><div className="brand"><span className="brandMark">NFC</span><span>PlacaFácil</span></div><nav><a href="#como">Como funciona</a><a href="#modelos">Modelos</a><a href="#personalizar">Personalizar</a></nav><button className="navCta" onClick={()=>document.getElementById('personalizar')?.scrollIntoView({behavior:'smooth'})}>Personalizar</button></header>
-  <button className="adminMenuButton" aria-label="Abrir menu" onClick={()=>setMenuOpen(v=>!v)}><MoreVertical size={24}/></button>
-  {menuOpen&&<div className="adminMenu"><button onClick={openAdmin}><Lock size={16}/> Administrador</button></div>}
-  {passwordOpen&&<div className="adminModalBackdrop" onClick={()=>setPasswordOpen(false)}><div className="adminModal" onClick={e=>e.stopPropagation()}><button className="adminModalClose" onClick={()=>setPasswordOpen(false)}><X size={18}/></button><div className="adminModalIcon"><Lock size={20}/></div><h3>Área do administrador</h3><p>Digite a senha para acessar os ajustes da placa.</p><input autoFocus type="password" value={password} onChange={e=>setPassword(e.target.value)} onKeyDown={e=>e.key==='Enter'&&enterAdmin()} placeholder="Senha"/><button className="primary full" onClick={enterAdmin}>Entrar</button>{passwordError&&<span className="adminPasswordError">{passwordError}</span>}</div></div>}
   <main>
    <section className="hero"><div className="heroCopy"><div className="eyebrow"><Wifi size={15}/> NFC + QR Code</div><h1>Sua empresa merece <span>mais avaliações.</span></h1><p>Placas NFC personalizadas que levam seu cliente direto para a avaliação no Google. Personalize sua placa e veja o resultado antes de comprar.</p><button className="primary" onClick={()=>document.getElementById('personalizar')?.scrollIntoView({behavior:'smooth'})}>Criar minha placa <ChevronRight size={18}/></button><div className="trust"><span><Check size={16}/> Personalizada</span><span><Check size={16}/> NFC configurado</span><span><Check size={16}/> QR Code real</span></div></div><div className="heroVisual"><div className="glow"/><div className="heroCard"><div className="heroCardTop"><span>PRÉVIA</span><span><Wifi size={12}/> NFC</span></div><div className="heroLogo">SUA LOGO</div><strong>PIZZARIA DO JOÃO</strong><h3>SUA AVALIAÇÃO<br/><em>É MUITO IMPORTANTE!</em></h3><div className="heroStars"><Star fill="currentColor" size={17}/><Star fill="currentColor" size={17}/><Star fill="currentColor" size={17}/><Star fill="currentColor" size={17}/><Star fill="currentColor" size={17}/></div><div className="heroBottom"><span>G Avalie no Google</span><div className="heroQr">QR</div></div></div></div></section>
 
