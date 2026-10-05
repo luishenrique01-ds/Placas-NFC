@@ -1,7 +1,8 @@
-import React,{useState} from 'react';
+import React,{useEffect,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import {Check,ChevronRight,ImagePlus,MessageCircle,Wifi,Heart,Star} from 'lucide-react';
 import PlatePersonalizer from './components/PlatePersonalizer';
+import AdminPanel from './components/AdminPanel';
 import './styles.css';
 
 const MODELS=[
@@ -12,6 +13,9 @@ const MODELS=[
 
 function App(){
  const [model,setModel]=useState(MODELS[0]);
+ const [admin,setAdmin]=useState(()=>window.location.hash==='#admin');
+ useEffect(()=>{const onHash=()=>setAdmin(window.location.hash==='#admin');window.addEventListener('hashchange',onHash);return()=>window.removeEventListener('hashchange',onHash)},[]);
+ if(admin)return <AdminPanel/>;
  return <div className="app">
   <header className="nav"><div className="brand"><span className="brandMark">NFC</span><span>PlacaFácil</span></div><nav><a href="#como">Como funciona</a><a href="#modelos">Modelos</a><a href="#personalizar">Personalizar</a></nav><button className="navCta" onClick={()=>document.getElementById('personalizar')?.scrollIntoView({behavior:'smooth'})}>Personalizar</button></header>
   <main>
@@ -22,7 +26,7 @@ function App(){
    <PlatePersonalizer/>
    <section id="como" className="how section"><div className="sectionHead"><div><span className="eyebrow">Simples para você</span><h2>Do pedido à sua porta.</h2></div></div><div className="steps"><Step n="01" icon={<ImagePlus/>} title="Personalize" text="Envie sua logo, informe o nome e escolha modelo, cor e link do Google."/><Step n="02" icon={<Wifi/>} title="Nós configuramos" text="O mesmo URL usado no QR Code fica registrado para a programação do NFC."/><Step n="03" icon={<MessageCircle/>} title="Receba e use" text="A placa chega pronta para colocar no balcão, parede ou caixa." /></div></section>
   </main>
-  <footer><div className="brand"><span className="brandMark">NFC</span><span>PlacaFácil</span></div><span>Placas personalizadas para negócios locais.</span></footer>
+  <footer><div className="brand"><span className="brandMark">NFC</span><span>PlacaFácil</span></div><span>Placas personalizadas para negócios locais.</span><a href="#admin" className="adminFooterLink">Administrador</a></footer>
  </div>
 }
 function Step({n,icon,title,text}){return <div className="step"><span>{n}</span><div className="stepIcon">{icon}</div><h3>{title}</h3><p>{text}</p></div>}
