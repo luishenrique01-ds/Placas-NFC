@@ -12,8 +12,9 @@ const PHOTO_POINTS_SOURCE=[[.390,.305],[.675,.292],[.705,.575],[.425,.610]];
 // Quando configurada, a API PHP passa a ser o renderizador principal.
 // Ex.: VITE_PHP_RENDERER_URL=https://seu-dominio.com/api/generate-plate.php
 const PHP_RENDERER_URL=(import.meta.env.VITE_PHP_RENDERER_URL||'').trim();
+function getSavedPoints(){try{const v=JSON.parse(localStorage.getItem('placas-nfc-photo-points')||'null');return Array.isArray(v)&&v.length===4?v:PHOTO_POINTS_SOURCE}catch{return PHOTO_POINTS_SOURCE}}
 
-export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,modelId='traditional',compact=false,points=PHOTO_POINTS_SOURCE}){
+export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,modelId='traditional',compact=false,points=getSavedPoints()}){
  const canvasRef=useRef(null),wrapRef=useRef(null),sceneRef=useRef(null),logoRef=useRef(null),qrRef=useRef(null);
  const [ready,setReady]=useState(false);
  const [phpImage,setPhpImage]=useState('');
