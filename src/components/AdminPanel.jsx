@@ -2,7 +2,7 @@ import React,{useEffect,useMemo,useRef,useState} from 'react';
 import PlatePreviewCanvas from './PlatePreviewCanvas';
 import scenePhoto from '../gen_ai_image_838d6515-7fe8-4ed1-a5c3-96a32f1b73a5.jpeg';
 
-const DEFAULT_POINTS=[[.390,.305],[.675,.292],[.705,.575],[.425,.610]];
+const DEFAULT_POINTS=[[487/1536,966/2752],[946/1536,952/2752],[1110/1536,1622/2752],[699/1536,1732/2752]];
 const KEY='placas-nfc-photo-points';
 const LABELS=['Topo esquerdo','Topo direito','Baixo direito','Baixo esquerdo'];
 
