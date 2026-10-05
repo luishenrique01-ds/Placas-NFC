@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1374" height="1145" viewBox="0 0 1374 1145">
+<defs>
+ <linearGradient id="wall" x2="0" y2="1"><stop stop-color="#4a3a2d"/><stop offset=".55" stop-color="#826448"/><stop offset="1" stop-color="#3d332b"/></linearGradient>
+ <linearGradient id="counter" x2="0" y2="1"><stop stop-color="#8f6037"/><stop offset=".35" stop-color="#5d3b25"/><stop offset="1" stop-color="#2f2118"/></linearGradient>
+ <linearGradient id="light" x2="1"><stop stop-color="#ffd98c" stop-opacity=".9"/><stop offset="1" stop-color="#d89b4d" stop-opacity=".05"/></linearGradient>
+ <filter id="blur"><feGaussianBlur stdDeviation="18"/></filter>
+ <filter id="soft"><feGaussianBlur stdDeviation="6"/></filter>
+ <linearGradient id="acrylic" x2="1" y2="1"><stop stop-color="#fff" stop-opacity=".4"/><stop offset=".5" stop-color="#fff" stop-opacity=".04"/><stop offset="1" stop-color="#fff" stop-opacity=".32"/></linearGradient>
+</defs>
+<rect width="1374" height="1145" fill="url(#wall)"/>
+<rect x="0" y="85" width="1374" height="120" fill="#1d1814" opacity=".65"/>
+<rect x="0" y="180" width="1374" height="20" fill="#c58b4c" opacity=".35" filter="url(#soft)"/>
+<rect x="100" y="115" width="390" height="55" rx="28" fill="url(#light)" filter="url(#blur)"/>
+<g opacity=".58" filter="url(#blur)">
+ <ellipse cx="100" cy="430" rx="125" ry="230" fill="#26462a"/>
+ <ellipse cx="45" cy="510" rx="95" ry="210" fill="#38633b"/>
+ <ellipse cx="155" cy="345" rx="90" ry="175" fill="#4b783e"/>
+</g>
+<g opacity=".55" filter="url(#soft)">
+ <rect x="1120" y="270" width="90" height="280" rx="22" fill="#181512"/>
+ <rect x="1240" y="300" width="70" height="260" rx="18" fill="#29231e"/>
+ <rect x="1040" y="350" width="60" height="210" rx="12" fill="#e8e2d8"/>
+</g>
+<rect y="635" width="1374" height="510" fill="url(#counter)"/>
+<path d="M0 700 Q350 655 700 700 T1374 680" fill="none" stroke="#b27b48" stroke-opacity=".35" stroke-width="7"/>
+<path d="M0 830 Q400 780 760 830 T1374 810" fill="none" stroke="#1e140e" stroke-opacity=".25" stroke-width="8"/>
+<path d="M0 980 Q450 930 900 980 T1374 960" fill="none" stroke="#c18b52" stroke-opacity=".2" stroke-width="6"/>
+<!-- acrylic sign shadow -->
+<path d="M390 930 L1015 865 L1080 960 L445 1030 Z" fill="#120c08" opacity=".42" filter="url(#blur)"/>
+<!-- transparent acrylic panel -->
+<polygon points="365,125 884,155 1005,885 475,955" fill="url(#acrylic)" stroke="#f7f7f7" stroke-opacity=".7" stroke-width="6"/>
+<!-- black printable area -->
+<polygon points="391,145 862,172 982,858 495,925" fill="#080808"/>
+<polygon points="391,145 862,172 982,858 495,925" fill="none" stroke="#252525" stroke-width="2"/>
+<!-- acrylic base -->
+<polygon points="420,920 1012,850 1070,970 455,1035" fill="url(#acrylic)" stroke="#fff" stroke-opacity=".65" stroke-width="5"/>
+<polygon points="455,945 1028,875 1045,930 470,1000" fill="#fff" opacity=".09"/>
+</svg>
