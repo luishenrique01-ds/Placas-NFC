@@ -7,12 +7,36 @@ const PHOTO=scenePhoto;
 
 // Pontos normalizados na FOTO ORIGINAL.
 // Ordem: topo-esquerdo, topo-direito, baixo-direito, baixo-esquerdo.
-const PHOTO_POINTS_SOURCE=[[.390,.305],[.675,.292],[.705,.575],[.425,.610]];
+const SOURCE_W=1536,SOURCE_H=2752;
+const PHOTO_POINTS_SOURCE=[[487/SOURCE_W,966/SOURCE_H],[946/SOURCE_W,952/SOURCE_H],[1110/SOURCE_W,1622/SOURCE_H],[699/SOURCE_W,1732/SOURCE_H]];
 
 // Quando configurada, a API PHP passa a ser o renderizador principal.
 // Ex.: VITE_PHP_RENDERER_URL=https://seu-dominio.com/api/generate-plate.php
 const PHP_RENDERER_URL=(import.meta.env.VITE_PHP_RENDERER_URL||'').trim();
 function getSavedPoints(){try{const v=JSON.parse(localStorage.getItem('placas-nfc-photo-points')||'null');return Array.isArray(v)&&v.length===4?v:PHOTO_POINTS_SOURCE}catch{return PHOTO_POINTS_SOURCE}}
+
+function homographyForQuad(p){
+ const [p0,p1,p2,p3]=p;
+ const [x0,y0]=p0,[x1,y1]=p1,[x2,y2]=p2,[x3,y3]=p3;
+ const dx1=x1-x2,dx2=x3-x2,dx3=x0-x1+x2-x3;
+ const dy1=y1-y2,dy2=y3-y2,dy3=y0-y1+y2-y3;
+ const den=dx1*dy2-dx2*dy1;
+ if(Math.abs(den)<1e-8)return (u,v)=>[(1-u)*(1-v)*x0+u*(1-v)*x1+u*v*x2+(1-u)*v*x3,(1-u)*(1-v)*y0+u*(1-v)*y1+u*v*y2+(1-u)*v*y3];
+ const g=(dx3*dy2-dx2*dy3)/den,h=(dx1*dy3-dx3*dy1)/den;
+ const a=x1-x0+g*x1,b=x3-x0+h*x3,c=x0,d=y1-y0+g*y1,e=y3-y0+h*y3,f=y0;
+ return (u,v)=>{const z=g*u+h*v+1;return[(a*u+b*v+c)/z,(d*u+e*v+f)/z]};
+}
+function affine(s0,s1,s2,d0,d1,d2){
+ const [x0,y0]=s0,[x1,y1]=s1,[x2,y2]=s2,[u0,v0]=d0,[u1,v1]=d1,[u2,v2]=d2;
+ const det=x0*(y1-y2)+x1*(y2-y0)+x2*(y0-y1);
+ if(Math.abs(det)<1e-8)return null;
+ return[(u0*(y1-y2)+u1*(y2-y0)+u2*(y0-y1))/det,(u0*(x2-x1)+u1*(x0-x2)+u2*(x1-x0))/det,(u0*(x1*y2-x2*y1)+u1*(x2*y0-x0*y2)+u2*(x0*y1-x1*y0))/det,(v0*(y1-y2)+v1*(y2-y0)+v2*(y0-y1))/det,(v0*(x2-x1)+v1*(x0-x2)+v2*(x1-x0))/det,(v0*(x1*y2-x2*y1)+v1*(x2*y0-x0*y2)+v2*(x0*y1-x1*y0))/det];
+}
+function drawTriangle(ctx,art,s0,s1,s2,d0,d1,d2){
+ const A=affine(s0,s1,s2,d0,d1,d2);if(!A)return;
+ ctx.save();ctx.beginPath();ctx.moveTo(...d0);ctx.lineTo(...d1);ctx.lineTo(...d2);ctx.closePath();ctx.clip();
+ ctx.transform(A[0],A[3],A[1],A[4],A[2],A[5]);ctx.drawImage(art,0,0);ctx.restore();
+}
 
 export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,modelId='traditional',compact=false,points=getSavedPoints()}){
  const canvasRef=useRef(null),wrapRef=useRef(null),sceneRef=useRef(null),logoRef=useRef(null),qrRef=useRef(null);
@@ -99,8 +123,7 @@ export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,mod
    // Fallback local: os mesmos pontos da foto original são convertidos para
    // a transformação "cover" usada para desenhar a foto no Canvas.
    const p=points.map(([x,y])=>[dx+x*dw,dy+y*dh]);
-   const bilinear=(u,v)=>{const[t,r,b,l]=p;return[t[0]*(1-u)*(1-v)+r[0]*u*(1-v)+b[0]*u*v+l[0]*(1-u)*v,t[1]*(1-u)*(1-v)+r[1]*u*(1-v)+b[1]*u*v+l[1]*(1-u)*v]};
-   const affine=(s0,s1,s2,d0,d1,d2)=>{const[x0,y0]=s0,[x1,y1]=s1,[x2,y2]=s2,[u0,v0]=d0,[u1,v1]=d1,[u2,v2]=d2,den=x0*(y1-y2)+x1*(y2-y0)+x2*(y0-y1);return[(u0*(y1-y2)+u1*(y2-y0)+u2*(y0-y1))/den,(u0*(x2-x1)+u1*(x0-x2)+u2*(x1-x0))/den,(u0*(x1*y2-x2*y1)+u1*(x2*y0-x0*y2)+u2*(x0*y1-x1*y0))/den,(v0*(y1-y2)+v1*(y2-y0)+v2*(y0-y1))/den,(v0*(x2-x1)+v1*(x0-x2)+v2*(x1-x0))/den,(v0*(x1*y2-x2*y1)+v1*(x2*y0-x0*y2)+v2*(x0*y1-x1*y0))/den]};
+   const map=homographyForQuad(p);
    const cols=48,rows=64;
    for(let rr=0;rr<rows;rr++)for(let cc=0;cc<cols;cc++){const x0=cc*PW/cols,y0=rr*PH/rows,x1=(cc+1)*PW/cols,y1=(rr+1)*PH/rows,q0=bilinear(x0/PW,y0/PH),q1=bilinear(x1/PW,y0/PH),q2=bilinear(x1/PW,y1/PH),q3=bilinear(x0/PW,y1/PH),m=affine([x0,y0],[x1,y0],[x1,y1],q0,q1,q2);ctx.save();ctx.beginPath();ctx.moveTo(...q0);ctx.lineTo(...q1);ctx.lineTo(...q2);ctx.lineTo(...q3);ctx.closePath();ctx.clip();ctx.transform(m[0],m[3],m[1],m[4],m[2],m[5]);ctx.drawImage(art,x0,y0,x1-x0,y1-y0,x0,y0,x1-x0,y1-y0);ctx.restore()}
    const gloss=ctx.createLinearGradient(0,0,W,H);gloss.addColorStop(0,'rgba(255,255,255,.10)');gloss.addColorStop(.35,'rgba(255,255,255,0)');gloss.addColorStop(.75,'rgba(255,255,255,.04)');gloss.addColorStop(1,'rgba(255,255,255,0)');ctx.fillStyle=gloss;ctx.fillRect(0,0,W,H);
