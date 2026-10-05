@@ -32,6 +32,7 @@ function affine(s0,s1,s2,d0,d1,d2){
  if(Math.abs(det)<1e-8)return null;
  return[(u0*(y1-y2)+u1*(y2-y0)+u2*(y0-y1))/det,(u0*(x2-x1)+u1*(x0-x2)+u2*(x1-x0))/det,(u0*(x1*y2-x2*y1)+u1*(x2*y0-x0*y2)+u2*(x0*y1-x1*y0))/det,(v0*(y1-y2)+v1*(y2-y0)+v2*(y0-y1))/det,(v0*(x2-x1)+v1*(x0-x2)+v2*(x1-x0))/det,(v0*(x1*y2-x2*y1)+v1*(x2*y0-x0*y2)+v2*(x0*y1-x1*y0))/det];
 }
+function bilinear(u,v){return [[(1-u)*(1-v),u*(1-v),u*v,(1-u)*v]]}[0].reduce((acc,w,i)=>[acc[0]+w*[[0,0],[1,0],[1,1],[0,1]][i][0],acc[1]+w*[[0,0],[1,0],[1,1],[0,1]][i][1]],[0,0]);}
 function drawTriangle(ctx,art,s0,s1,s2,d0,d1,d2){
  const A=affine(s0,s1,s2,d0,d1,d2);if(!A)return;
  ctx.save();ctx.beginPath();ctx.moveTo(...d0);ctx.lineTo(...d1);ctx.lineTo(...d2);ctx.closePath();ctx.clip();
