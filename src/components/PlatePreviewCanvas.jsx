@@ -70,7 +70,7 @@ export default function PlatePreviewCanvas({name,logo,backgroundId,reviewUrl,mod
   };
   run();
   return()=>{alive=false};
- },[ready,name,logo,backgroundId,reviewUrl,modelId]);
+ },[ready,name,logo,backgroundId,reviewUrl,modelId,points]);
 
  useEffect(()=>{
   if(!ready||PHP_RENDERER_URL&&phpImage)return;
